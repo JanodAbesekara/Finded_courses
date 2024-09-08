@@ -7,13 +7,17 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class UserDTO {
     private int id;
-    private String firstname;
-    private String lastname;
     private String email;
-    private String password;
+    private String firstName;
+    private String lastName;
+    private String password;  // Password should be hashed
 
-
+    public UserDTO(String email, String firstName, String lastName, String password) {
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.password = password;
+    }
 }

@@ -1,28 +1,95 @@
 package com.FindCourse.findcourse.Model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
+@Table(name = "users")
 public class User {
+
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    private int id;
-    private String firstname;
-    private String lastname;
+    @Column(nullable = false, unique = true)
     private String email;
-    private String password;
-    private String role;
 
-    @PrePersist
-    protected void prePersist() {
-        if (this.role == null) {
-            this.role = "Student";
-        }
+    @Column(nullable = false)
+    private String firstName;
+
+    @Column(nullable = false)
+    private String lastName;
+
+    @Column(nullable = false)
+    private String role = "Student";  // Default role is Student
+
+    @Column(nullable = false)
+    private String password;  // Ensure this is hashed during save operations
+
+    // Constructor without id (with role as an optional parameter)
+    public User(String email, String firstName, String lastName, String password, String role) {
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.password = password;
+        this.role = (role == null || role.isEmpty()) ? "Student" : role;  // Set default role if not provided
+    }
+
+    // Constructor without role (role defaults to "Student")
+    public User(String email, String firstName, String lastName, String password) {
+        this(email, firstName, lastName, password, "Student");
+    }
+
+    // Default constructor
+    public User() {
+        this.role = "Student";  // Ensure default role is set in no-arg constructor
+    }
+
+    // Getters and Setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;  // Use BCryptPasswordEncoder for hashing before saving
     }
 }
