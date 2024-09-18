@@ -19,9 +19,16 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(auth -> auth.anyRequest().authenticated());
-        http.oauth2Login(Customizer.withDefaults());
-        http.formLogin(Customizer.withDefaults());
+        http
+                .authorizeHttpRequests(authorizeRequests ->
+                        authorizeRequests
+                                .requestMatchers("/", "/gouth").permitAll()
+                                .anyRequest().authenticated()
+                )
+                .oauth2Login(oauth2Login ->
+                        oauth2Login
+                                .defaultSuccessUrl("http://localhost:3000/Projile", true)  // Redirect to frontend on success
+                );
         return http.build();
     }
 
