@@ -1,6 +1,7 @@
 package com.FindCourse.findcourse.Model;
 
 import jakarta.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -25,26 +26,11 @@ public class User {
     @Column(nullable = false)
     private String password;  // Ensure this is hashed during save operations
 
-    // Constructor without id (with role as an optional parameter)
-    public User(String email, String firstName, String lastName, String password, String role) {
-        this.email = email;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.password = password;
-        this.role = (role == null || role.isEmpty()) ? "Student" : role;  // Set default role if not provided
-    }
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FeedBacks> feedbacks;  // One-to-many relationship with FeedBacks
 
-    // Constructor without role (role defaults to "Student")
-    public User(String email, String firstName, String lastName, String password) {
-        this(email, firstName, lastName, password, "Student");
-    }
+    // Constructors, Getters, and Setters
 
-    // Default constructor
-    public User() {
-        this.role = "Student";  // Ensure default role is set in no-arg constructor
-    }
-
-    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -91,5 +77,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;  // Use BCryptPasswordEncoder for hashing before saving
+    }
+
+    public List<FeedBacks> getFeedbacks() {
+        return feedbacks;
+    }
+
+    public void setFeedbacks(List<FeedBacks> feedbacks) {
+        this.feedbacks = feedbacks;
     }
 }
