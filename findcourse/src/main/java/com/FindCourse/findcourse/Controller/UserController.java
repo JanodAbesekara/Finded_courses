@@ -2,9 +2,9 @@ package com.FindCourse.findcourse.Controller;
 
 
 import com.FindCourse.findcourse.Model.FeedBacks;
-import com.FindCourse.findcourse.Model.User;
 import com.FindCourse.findcourse.Services.UserServices;
 import com.FindCourse.findcourse.dto.AddFeedBacksDTO;
+import com.FindCourse.findcourse.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +26,7 @@ public class UserController {
 
 
     @GetMapping("/getuserdetails")
-    public ResponseEntity<User> getUserByEmail(@RequestParam String email) {
+    public ResponseEntity<UserDTO> getUserByEmail(@RequestParam String email) {
         return userServices.getUserByEmail(email);
     }
 }

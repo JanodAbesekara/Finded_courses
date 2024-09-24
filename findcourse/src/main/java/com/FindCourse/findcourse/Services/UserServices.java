@@ -51,7 +51,7 @@ public class UserServices {
 
     }
 
-    @Transactional
+
     public FeedBacks saveFeedback(String userEmail, String feedbackContent) {
         // Find the user by email
         User user = userRepository.findByEmail(userEmail)
@@ -72,13 +72,25 @@ public class UserServices {
     }
 
 
-    @Transactional
-    public ResponseEntity<User> getUserByEmail(String email) {
+
+    public ResponseEntity<UserDTO> getUserByEmail(String email) {
         Optional<User> user = userRepository.findByEmail(email);
 
         if (user.isPresent()) {
-            System.out.println("User found with ID: " + user.get().getId());
-            return ResponseEntity.ok(user.get());  // Return 200 OK with the user details
+            User foundUser = user.get();
+
+            // Create UserDTO with only the necessary fields
+            UserDTO userDTO = new UserDTO(
+                    foundUser.getEmail(),
+                    foundUser.getFirstName(),
+                    foundUser.getLastName(),
+                    foundUser.getPassword(),
+                    foundUser.getRole()  // Role is optional
+            );
+
+            System.out.println("User found with ID: " + foundUser.getId());
+            return ResponseEntity.ok(userDTO);  // Return 200 OK with the user DTO
+
         } else {
             System.out.println("User not found with email: " + email);
             return ResponseEntity.notFound().build();  // Return 404 if the user is not found

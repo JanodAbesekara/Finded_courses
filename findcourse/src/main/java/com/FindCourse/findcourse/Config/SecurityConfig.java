@@ -24,7 +24,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/", "/gouth","api/V1/addFeedback" ,"/api/V1/getuserdetails/**" ,"api/V1/**").permitAll()
+                                .requestMatchers("/", "/gouth","api/V1/addFeedback" ,"/api/V1/getuserdetails/**" ).permitAll()
                                 .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2Login ->
