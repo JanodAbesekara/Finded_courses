@@ -26,11 +26,11 @@ public class SecurityConfig {
         http    .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
+                                .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
                                 .anyRequest().authenticated())
                // .formLogin(form-> form.defaultSuccessUrl("/greet", true));
                 .oauth2Login(oauth2 -> oauth2.defaultSuccessUrl("http://localhost:3000/Projile", true));
         return http.build();
     }
-
 
 }

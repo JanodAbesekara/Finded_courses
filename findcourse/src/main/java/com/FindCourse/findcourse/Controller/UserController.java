@@ -14,18 +14,15 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 
 
+//@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 @RequestMapping(value = "api/V1")
-@CrossOrigin
 @RestController
 public class UserController {
 
     @Autowired
     private UserServices userServices;
 
-    @GetMapping("/User-info")
-    public Map<String, Object> user(@AuthenticationPrincipal OAuth2User principal) {
-        return principal.getAttributes();
-    }
+
 
     // Add feedback for a user
     @PostMapping("/addFeedback")
