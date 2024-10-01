@@ -1,8 +1,10 @@
 package com.FindCourse.findcourse;
 
 import com.FindCourse.findcourse.Services.UserServices;
+import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 
 import java.security.Principal;
 
@@ -14,8 +16,4 @@ public class FindcourseApplication {
 	}
 
 
-	public UserServices saveuser(Principal principal) {
-
-		return null;
-	}
 }

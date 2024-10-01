@@ -5,6 +5,7 @@ import com.FindCourse.findcourse.Services.UserServices;
 import com.FindCourse.findcourse.dto.AddFeedBacksDTO;
 import com.FindCourse.findcourse.dto.UserDTO;
 
+import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +15,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 
 
-//@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 @RequestMapping(value = "api/V1")
 @RestController
 public class UserController {
@@ -34,4 +35,15 @@ public class UserController {
     public ResponseEntity<UserDTO> getUserByEmail(@RequestParam String email) {
         return userServices.getUserByEmail(email);
     }
+
+    @GetMapping("/getallfeedbacks")
+    public ResponseEntity<List<AddFeedBacksDTO>> getAllFeedbacks() {
+        return userServices.getAllFeedbacks();
+    }
+
+    @DeleteMapping("/deletefeedback")
+    public ResponseEntity<AddFeedBacksDTO> deleteFeedback(@RequestParam int id) {
+        return userServices.deleteFeedback(id);
+    }
+
 }

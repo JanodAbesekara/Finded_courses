@@ -1,17 +1,21 @@
 package com.FindCourse.findcourse.Services;
 
 import com.FindCourse.findcourse.Model.FeedBacks;
+import com.FindCourse.findcourse.dto.AddFeedBacksDTO;
 import com.FindCourse.findcourse.dto.UserDTO;
 import com.FindCourse.findcourse.Model.User;
 import com.FindCourse.findcourse.repo.FeedRepo;
 import com.FindCourse.findcourse.repo.UserRepository;
 import jakarta.transaction.Transactional;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
@@ -72,6 +76,35 @@ public class UserServices {
     }
 
 
+    public ResponseEntity<List<AddFeedBacksDTO>> getAllFeedbacks() {
+        // Fetch all feedbacks from the repository
+        List<FeedBacks> feedbacks = feedRepo.findAll();
+
+        // Map each FeedBacks object to AddFeedBacksDTO
+        List<AddFeedBacksDTO> feedbackDTOs = feedbacks.stream()
+                .map(feedback -> new AddFeedBacksDTO(feedback.getUser().getEmail(), feedback.getFeedback(), feedback.getId()))
+                .collect(Collectors.toList());
+
+        // Return the list of feedback DTOs as a ResponseEntity
+        return ResponseEntity.ok(feedbackDTOs);
+    }
+
+
+    public ResponseEntity<AddFeedBacksDTO> deleteFeedback(int id) {
+        // Find the feedback by ID
+        Optional<FeedBacks> feedback = feedRepo.findById(id);
+
+        if (feedback.isPresent()) {
+            FeedBacks foundFeedback = feedback.get();
+            feedRepo.delete(foundFeedback);  // Delete the feedback
+            System.out.println("Feedback deleted with ID: " + foundFeedback.getId());
+            return ResponseEntity.ok(new AddFeedBacksDTO(foundFeedback.getUser().getEmail(), foundFeedback.getFeedback(), foundFeedback.getId()));
+
+        } else {
+            System.out.println("Feedback not found with ID: " + id);
+            return ResponseEntity.notFound().build();  // Return 404 if the feedback is not found
+        }
+    }
 
     public ResponseEntity<UserDTO> getUserByEmail(String email) {
         Optional<User> user = userRepository.findByEmail(email);
