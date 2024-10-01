@@ -1,6 +1,5 @@
 package com.FindCourse.findcourse.dto;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,19 +7,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+public class FeedbackDTOGET {
 
-public class AddFeedBacksDTO {
     private String useremail;
     private String feedback;
-    private int id;
 
-    public int getId() {
-        return id;
-    }
 
-    public void setId(int id) {
-        this.id = id;
-    }
 
 
     public String getUseremail() {

@@ -3,6 +3,7 @@ package com.FindCourse.findcourse.Controller;
 import com.FindCourse.findcourse.Model.FeedBacks;
 import com.FindCourse.findcourse.Services.UserServices;
 import com.FindCourse.findcourse.dto.AddFeedBacksDTO;
+import com.FindCourse.findcourse.dto.FeedbackDTOGET;
 import com.FindCourse.findcourse.dto.UserDTO;
 
 import java.util.List;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+
 
 
 
@@ -27,7 +29,7 @@ public class UserController {
 
     // Add feedback for a user
     @PostMapping("/addFeedback")
-    public FeedBacks addFeedback(@RequestBody AddFeedBacksDTO feedbackDTO) {
+    public FeedBacks addFeedback(@RequestBody FeedbackDTOGET feedbackDTO) {
         return userServices.saveFeedback(feedbackDTO.getUseremail(), feedbackDTO.getFeedback());
     }
 

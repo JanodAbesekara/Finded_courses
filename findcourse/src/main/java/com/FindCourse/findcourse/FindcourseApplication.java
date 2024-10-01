@@ -1,6 +1,5 @@
 package com.FindCourse.findcourse;
 
-import com.FindCourse.findcourse.Services.UserServices;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -15,5 +14,8 @@ public class FindcourseApplication {
 		SpringApplication.run(FindcourseApplication.class, args);
 	}
 
-
+	@Bean
+	public ModelMapper modelMapper(){
+		return  new ModelMapper();
+	}
 }

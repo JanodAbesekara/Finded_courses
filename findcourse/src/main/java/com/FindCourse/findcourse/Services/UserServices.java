@@ -1,5 +1,6 @@
 package com.FindCourse.findcourse.Services;
 
+
 import com.FindCourse.findcourse.Model.FeedBacks;
 import com.FindCourse.findcourse.dto.AddFeedBacksDTO;
 import com.FindCourse.findcourse.dto.UserDTO;
@@ -8,6 +9,7 @@ import com.FindCourse.findcourse.repo.FeedRepo;
 import com.FindCourse.findcourse.repo.UserRepository;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
@@ -20,6 +22,7 @@ import java.util.stream.Collectors;
 import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @Service
+@Transactional
 public class UserServices {
 
     @Autowired
@@ -28,7 +31,15 @@ public class UserServices {
     @Autowired
     private FeedRepo feedRepo;
 
+    @Autowired
+    private ModelMapper modelMapper;
 
+
+
+    public List<AddFeedBacksDTO> getallFeedbacks() {
+        List<FeedBacks> feedbacklist = feedRepo.findAll();
+        return modelMapper.map(feedbacklist, new TypeToken<List<AddFeedBacksDTO>>(){}.getType());
+    }
 
 
     public void saveUser(UserDTO userDTO) {
@@ -60,9 +71,6 @@ public class UserServices {
         // Find the user by email
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new RuntimeException("User not found with email: " + userEmail));
-
-        System.out.println("User found with ID: " + user.getId());
-
         // Create and set feedback
         FeedBacks feedback = new FeedBacks();
         feedback.setFeedback(feedbackContent);
@@ -105,6 +113,7 @@ public class UserServices {
             return ResponseEntity.notFound().build();  // Return 404 if the feedback is not found
         }
     }
+
 
     public ResponseEntity<UserDTO> getUserByEmail(String email) {
         Optional<User> user = userRepository.findByEmail(email);
