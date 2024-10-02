@@ -19,8 +19,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
-
 @Service
 @Transactional
 public class UserServices {
@@ -78,7 +76,7 @@ public class UserServices {
 
         // Save feedback
         FeedBacks savedFeedback = feedRepo.save(feedback);
-        System.out.println("Feedback saved with ID: " + savedFeedback.getId());
+
 
         return savedFeedback;
     }
@@ -105,11 +103,11 @@ public class UserServices {
         if (feedback.isPresent()) {
             FeedBacks foundFeedback = feedback.get();
             feedRepo.delete(foundFeedback);  // Delete the feedback
-            System.out.println("Feedback deleted with ID: " + foundFeedback.getId());
+
             return ResponseEntity.ok(new AddFeedBacksDTO(foundFeedback.getUser().getEmail(), foundFeedback.getFeedback(), foundFeedback.getId()));
 
         } else {
-            System.out.println("Feedback not found with ID: " + id);
+
             return ResponseEntity.notFound().build();  // Return 404 if the feedback is not found
         }
     }
@@ -130,13 +128,46 @@ public class UserServices {
                     foundUser.getRole()  // Role is optional
             );
 
-            System.out.println("User found with ID: " + foundUser.getId());
+
             return ResponseEntity.ok(userDTO);  // Return 200 OK with the user DTO
 
         } else {
-            System.out.println("User not found with email: " + email);
+
             return ResponseEntity.notFound().build();  // Return 404 if the user is not found
         }
     }
 
+    public ResponseEntity<List<AddFeedBacksDTO>> getOnlyUsersFeedbacks(String email) {
+        Optional<User> user = userRepository.findByEmail(email);
+        if (user.isPresent()) {
+            User foundUser = user.get();
+            List<FeedBacks> feedbacks = feedRepo.findByUser(foundUser);
+            List<AddFeedBacksDTO> feedbackDTOs = feedbacks.stream()
+                    .map(feedback -> new AddFeedBacksDTO(feedback.getUser().getEmail(), feedback.getFeedback(), feedback.getId()))
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(feedbackDTOs);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    public ResponseEntity<AddFeedBacksDTO> deleteAllFeedbacks( int id) {
+        feedRepo.delete(feedRepo.getReferenceById(id));
+        return ResponseEntity.ok().build();
+    }
+
+    public ResponseEntity<AddFeedBacksDTO> updateFeedback(AddFeedBacksDTO addFeedBacksDTO) {
+        FeedBacks feedback = feedRepo.getReferenceById(addFeedBacksDTO.getId());
+        feedback.setFeedback(addFeedBacksDTO.getFeedback());
+        feedRepo.save(feedback);
+        return ResponseEntity.ok(addFeedBacksDTO);
+    }
+
+    public ResponseEntity<UserDTO> updateAdmin(String email) {
+        User user = userRepository.findByEmail(email).get();
+        user.setRole("ADMIN");
+        userRepository.save(user);
+        System.out.println("User updated with ID: " + user.getId());
+        return ResponseEntity.ok().build();
+    }
 }
